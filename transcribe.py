@@ -2,7 +2,15 @@
 Transcribe audio files to SRT subtitle using OpenAI Whisper.
 
 Requirements:
-    pip install whisper opencc-python-reimplemented
+     on the system such as `brew install ffmpeg` on Mac, `apt install ffmpeg` on Linux or https://ffmpeg.org/download.html on windows
+    1. pip install whisper opencc-python-reimplemented
+    2. ffmpeg
+       Mac:     `brew install ffmpeg` or https://evermeet.cx/ffmpeg/
+       Linux:   `apt-get install ffmpeg`
+       Windows: https://ffmpeg.org/download.html
+
+Suggestion:
+    numpy should be latest 1.x, such as `pip install "numpy<2"`
 
 Usage:
     python transcribe.py <audio_path> [--to-simplified] [--model MODEL_NAME]
