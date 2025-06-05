@@ -36,6 +36,7 @@ import time
 import argparse
 import subprocess
 import whisper
+import torch
 import opencc
 import tempfile
 import shutil
@@ -130,10 +131,18 @@ def transcribe_to_srt(input_path, to_simplified=False, model_name="large", langu
         audio_path = input_path
         temp_dir = None
 
-    print(f"Loading model: {model_name}")
-    model = whisper.load_model(model_name)
-    print(f"Transcribing: {input_path}")
+    cc = None
+    try:
+        cc = opencc.OpenCC('t2s' if to_simplified else 's2t')
+    except:
+        print("OpenCC not installed.")
+
+    device = "mps" if torch.backends.mps.is_available() else "cuda" if torch.cuda.is_available() else "cpu"
+
+    print(f"Loading model: {model_name} on {device}")
+    model = whisper.load_model(model_name, device=device)
     start_time = time.time()
+    print(f"Transcribing: {input_path} starting at {time.ctime(start_time)}")
 
     extra_args = {"language": language}
     if model_name == "large":
@@ -142,12 +151,6 @@ def transcribe_to_srt(input_path, to_simplified=False, model_name="large", langu
     result = model.transcribe(audio_path, **extra_args)
     print(f"Transcribing finshed in {time.time() - start_time}s. Let's process.")
     duration = get_audio_duration(audio_path)
-
-    cc = None
-    try:
-        cc = opencc.OpenCC('t2s' if to_simplified else 's2t')
-    except:
-        print("OpenCC not installed.")
 
     previous_text = None
     with open(output_file, 'w', encoding='utf-8') as f:
