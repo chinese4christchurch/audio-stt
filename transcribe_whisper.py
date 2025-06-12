@@ -100,7 +100,8 @@ known_phrases = [   # For correcting terms
     "彼得後書", "約翰一書", "約翰二書", "約翰三書", "猶大書",
     "啟示錄",
     "經文", "經節", "海沃", "詩班", "領詩", "臨到", "查經",
-    "外邦人", "事奉", "靈修", "諮商",
+    "外邦人", "事奉", "靈修", "諮商", "單只", "敬虔", "神蹟", "信主",
+    "猶大", "爭戰", "未信", "神國", "天父", "傳道", "恩召", "牧會",
 ]
 
 def replace_with_known_phrases(text):
@@ -137,7 +138,7 @@ def transcribe_to_srt(input_path, to_simplified=False, model_name="large", langu
     except:
         print("OpenCC not installed.")
 
-    device = "mps" if torch.backends.mps.is_available() else "cuda" if torch.cuda.is_available() else "cpu"
+    device = "cuda" if torch.cuda.is_available() else "cpu"
 
     print(f"Loading model: {model_name} on {device}")
     model = whisper.load_model(model_name, device=device)
